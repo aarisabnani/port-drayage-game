@@ -58,7 +58,7 @@
 <body>
 <div class="wrap">
   <h1>Port drayage routing game</h1>
-  <p class="sub">You're a drayage driver. Move all 3 containers from the Port to the warehouse before gate time runs out. Diagonals are allowed. The straight diagonal cuts through homes &mdash; faster, but every truck that passes leaves the block dirtier.</p>
+  <p class="sub">You are a drayage driver. Your goal is to move all 3 containers from the Port to the warehouse before gate time runs out. Diagonals are allowed. The straight diagonal cuts through homes: faster, but every truck that passes leaves the block dirtier.</p>
 
   <div class="levelbar" id="levelbar"></div>
   <div class="leveltitle" id="leveltitle"></div>
@@ -100,9 +100,9 @@
   const TRUCK='<svg viewBox="0 0 24 24" fill="#1a1a1a" xmlns="http://www.w3.org/2000/svg"><path d="M3 5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v3h3.2a1 1 0 0 1 .8.4l2.6 3.47a1 1 0 0 1 .2.6V16a1 1 0 0 1-1 1h-1.05a2.5 2.5 0 0 1-4.9 0H9.95a2.5 2.5 0 0 1-4.9 0H4a1 1 0 0 1-1-1V5Zm11 5h5.5L17.7 8H14v2ZM7.5 15.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Zm10 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/></svg>';
 
   const LEVELS=[
-    {name:"Day 1 \u2014 Slack", desc:"Gate hours are generous. A fully clean run is possible if you route carefully.", budget:21},
-    {name:"Day 2 \u2014 Average", desc:"Tighter gate hours. You can't keep every load clean \u2014 at least one has to cut through.", budget:20},
-    {name:"Day 3 \u2014 Peak", desc:"Peak day, 6,500 trucks. Barely enough gate time to finish. Almost everything goes through homes.", budget:18}
+    {name:"Day 1: Slack", desc:"Gate hours are generous. A fully clean run is possible if you route carefully.", budget:21},
+    {name:"Day 2: Average", desc:"Tighter gate hours. You can't keep every load clean; at least one has to cut through.", budget:20},
+    {name:"Day 3: Peak", desc:"Peak day, 6,500 trucks. Barely enough gate time to finish. Almost everything goes through homes.", budget:18}
   ];
 
   let lvl=0;
