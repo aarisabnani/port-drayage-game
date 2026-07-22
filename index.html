@@ -8,20 +8,25 @@
   :root{
     --bg:#faf9f5; --surface:#ffffff; --surface2:#f1efe8; --road:#e8e6dd;
     --text:#2c2c2a; --text2:#5f5e5a; --border:rgba(0,0,0,.12);
+    --port:#085041; --dest:#0C447C; --accent:#FAC775;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     line-height:1.6;padding:24px}
-  .wrap{max-width:680px;margin:0 auto}
+  .wrap{max-width:700px;margin:0 auto}
   h1{font-size:22px;font-weight:500;margin:0 0 4px}
   .sub{color:var(--text2);font-size:14px;margin:0 0 16px}
-  .levelbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 16px}
+  .levelbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}
   .levelbar .pill{font-size:13px;padding:4px 12px;border-radius:999px;border:.5px solid var(--border);background:var(--surface2);cursor:pointer}
   .levelbar .pill.active{background:#0C447C;color:#fff;border-color:#0C447C}
   .leveltitle{font-size:15px;font-weight:500}
   .leveltitle small{font-weight:400;color:var(--text2)}
-  .board{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:var(--surface2);padding:10px;border-radius:12px}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+  .badge{font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;border:.5px solid var(--border);display:none;width:fit-content}
+  .badge.rush{color:#8A4632;background:#FAECE7}
+  .badge.event{color:#7a1f1f;background:#f7e2e2}
+  .board{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:var(--surface2);padding:10px;border-radius:12px;margin-top:12px}
   .cell{position:relative;aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;
     font-size:12px;font-weight:500;cursor:pointer;border:.5px solid var(--border);
     background:var(--surface);transition:background .15s}
@@ -29,21 +34,37 @@
   .cell.road{background:var(--road);cursor:default}
   .cell.port{background:#E1F5EE;color:#085041;cursor:default;font-weight:600}
   .cell.dest{background:#E6F1FB;color:#0C447C;cursor:default;font-weight:600}
-  .cell.onpath{outline:2px solid #FAC775;outline-offset:-2px}
+  .cell.onpath{outline:2px solid var(--accent);outline-offset:-2px}
+  .cell.blocked{background:#5a5a5a!important;cursor:not-allowed}
+  .cell.blocked::after{content:"\2715";color:#fff;font-size:18px;position:absolute}
+  .cell.event-hot{box-shadow:inset 0 0 0 2px #c0392b}
   .cell .truck{position:absolute;width:60%;height:60%;display:flex;align-items:center;justify-content:center}
   .cell .truck svg{width:100%;height:100%}
+  .cell .truck.clean svg path{fill:#0a7d5a}
   .cell .seq{position:absolute;top:2px;right:4px;font-size:10px;font-weight:600;color:var(--text2)}
   .cell.onpath.stained .seq{color:#fff}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-  .stat{background:var(--surface2);border-radius:8px;padding:12px 16px}
-  .stat .lab{font-size:13px;color:var(--text2)}
-  .stat .val{font-size:24px;font-weight:500}
-  .stat .val small{font-size:14px;color:var(--text2);font-weight:400}
-  .leg{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--text2);margin:16px 0}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}
+  .stat{background:var(--surface2);border-radius:8px;padding:10px 12px}
+  .stat .lab{font-size:12px;color:var(--text2)}
+  .stat .val{font-size:22px;font-weight:500}
+  .stat .val small{font-size:13px;color:var(--text2);font-weight:400}
+  .stat.score .val{color:#0C447C}
+  .leg{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--text2);margin:14px 0 0}
   .leg span{display:inline-flex;align-items:center;gap:6px}
   .sw{width:14px;height:14px;border-radius:3px;display:inline-block;border:.5px solid var(--border)}
-  #msg{font-size:14px;color:var(--text);min-height:40px;margin-bottom:10px}
-  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  .tools{margin:16px 0 0;display:none}
+  .tools h3{font-size:13px;font-weight:600;margin:0 0 8px;color:var(--text2);text-transform:uppercase;letter-spacing:.03em}
+  .toolrow{display:flex;gap:8px;flex-wrap:wrap}
+  .tool{flex:1;min-width:150px;background:var(--surface);border:.5px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s}
+  .tool:hover{border-color:var(--dest);background:#f6f9fd}
+  .tool.armed{border-color:var(--dest);background:#eaf2fc;box-shadow:0 0 0 1px var(--dest)}
+  .tool.spent{opacity:.4;cursor:not-allowed;background:var(--surface2)}
+  .tool.spent:hover{border-color:var(--border);background:var(--surface2)}
+  .tool .tname{font-size:13px;font-weight:600}
+  .tool .tdesc{font-size:12px;color:var(--text2);line-height:1.35}
+  .tool .tcount{font-size:12px;font-weight:600;color:var(--dest);margin-top:2px}
+  #msg{font-size:14px;color:var(--text);min-height:44px;margin:14px 0 8px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   button{font:inherit;font-size:14px;padding:8px 16px;border-radius:8px;
     border:.5px solid rgba(0,0,0,.25);background:transparent;color:var(--text);cursor:pointer}
   button:hover{background:var(--surface2)}
@@ -53,30 +74,46 @@
   button.go{background:#085041;color:#fff;border-color:#085041}
   button.go:hover{background:#063d31}
   button[hidden]{display:none}
+  .best{font-size:13px;color:var(--text2);margin-left:auto}
+  .best b{color:var(--text)}
+  .policy{display:none;margin:14px 0 0;padding:12px 14px;background:#eef6f2;border:.5px solid rgba(8,80,65,.25);border-radius:10px;font-size:13px;color:#0a4a3c}
+  .policy b{color:#063d31}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Port drayage routing game</h1>
-  <p class="sub">You are a drayage driver. Your goal is to move all 3 containers from the Port to the warehouse before gate time runs out. Diagonals are allowed. The straight diagonal cuts through homes: faster, but every truck that passes leaves the block dirtier.</p>
+  <p class="sub">You're a drayage driver. Move all 3 containers from the Port to the warehouse before gate time runs out. Diagonals count. The straight diagonal cuts through homes: faster, but every truck that passes leaves the block dirtier.</p>
 
   <div class="levelbar" id="levelbar"></div>
   <div class="leveltitle" id="leveltitle"></div>
+  <div class="badges">
+    <div class="badge rush" id="rushdead"></div>
+    <div class="badge event" id="eventbadge"></div>
+  </div>
 
   <div class="leg" style="margin-top:12px">
     <span><i class="sw" style="background:#E1F5EE"></i>Port</span>
     <span><i class="sw" style="background:#E6F1FB"></i>Warehouse</span>
-    <span><i class="sw" style="background:#d98c6a"></i>Residential (stains as trucks pass)</span>
+    <span><i class="sw" style="background:#d98c6a"></i>Residential (pollutes as trucks pass)</span>
     <span><i class="sw" style="background:#e8e6dd"></i>Bypass road</span>
   </div>
 
   <div class="board" id="board"></div>
 
   <div class="stats">
-    <div class="stat"><div class="lab">Gate time used</div><div class="val"><span id="time">0</span><small id="budget">/21</small></div></div>
-    <div class="stat"><div class="lab">Containers moved</div><div class="val"><span id="moved">0</span><small>/3</small></div></div>
-    <div class="stat"><div class="lab">Pollution score</div><div class="val" id="poll">0</div></div>
+    <div class="stat"><div class="lab">Gate time</div><div class="val"><span id="time">0</span><small id="budget">/21</small></div></div>
+    <div class="stat"><div class="lab">Containers</div><div class="val"><span id="moved">0</span><small>/3</small></div></div>
+    <div class="stat"><div class="lab">Pollution</div><div class="val" id="poll">0</div></div>
+    <div class="stat score" id="scorestat" style="display:none"><div class="lab">Score</div><div class="val" id="score">0</div></div>
   </div>
+
+  <div class="tools" id="tools">
+    <h3>Tools <span style="font-weight:400;text-transform:none;letter-spacing:0">(tap to arm, then lay your route)</span></h3>
+    <div class="toolrow" id="toolrow"></div>
+  </div>
+
+  <div class="policy" id="policy"></div>
 
   <div id="msg"></div>
 
@@ -84,34 +121,133 @@
     <button class="primary" id="deliver">Deliver this load</button>
     <button id="reset">Restart day</button>
     <button class="go" id="next" hidden>Next day &rarr;</button>
+    <span class="best" id="best"></span>
   </div>
 </div>
 <script>
 (function(){
   const COLS=7,ROWS=7;
   const PORT={r:6,c:0}, WH={r:0,c:6};
-  const RESID=[
-    [5,1],[4,2],[3,3],[2,4],[1,5],   // diagonal core
-    [5,2],[4,3],[3,4],               // wider band on lower side
-    [2,2],[4,5]                      // scattered homes
-  ].map(function(a){return a[0]+"-"+a[1];});
-  const residSet=new Set(RESID);
+
+  // ---- Residential layout: a fixed diagonal spine (the Port-to-warehouse shortcut the
+  // whole game is about) plus a scatter of homes that reshuffles every load, so each load
+  // is a fresh routing problem instead of the same solved path three times. ----
+  const CORE=[[5,1],[4,2],[3,3],[2,4],[1,5]];
+  const SCATTER_CANDIDATES=(function(){
+    const coreSet=new Set(CORE.map(function(a){return a[0]+"-"+a[1];}));
+    const out=[];
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      if(r===PORT.r&&c===PORT.c)continue;
+      if(r===WH.r&&c===WH.c)continue;
+      if(coreSet.has(r+"-"+c))continue;
+      const diag=r+c;
+      if(Math.abs(diag-6)<=2 && diag>=2 && diag<=10)out.push([r,c]);
+    }
+    return out;
+  })();
+  const SCATTER_COUNT=[5,6,8]; // homes added per load, by day
+
+  let residSet=new Set();
+
+  // Shortest route cost from Port to WH. If avoidResid is true, residential cells are
+  // off limits, so this returns the cost of a fully clean route (or null if none exists).
+  function shortestCost(residKeys, avoidResid, closedKey){
+    const startK=PORT.r+"-"+PORT.c, whK=WH.r+"-"+WH.c;
+    const dist={}; dist[startK]=0;
+    const queue=[[PORT.r,PORT.c]];
+    // simple Dijkstra with unit costs (BFS is sufficient)
+    let head=0;
+    while(head<queue.length){
+      const cur=queue[head++];
+      const cd=dist[cur[0]+"-"+cur[1]];
+      for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){
+        if(dr===0&&dc===0)continue;
+        const nr=cur[0]+dr, nc=cur[1]+dc;
+        if(nr<0||nr>=ROWS||nc<0||nc>=COLS)continue;
+        const nk=nr+"-"+nc;
+        if(nk!==whK){
+          if(closedKey&&nk===closedKey)continue;
+          if(avoidResid&&residKeys.has(nk))continue;
+        }
+        if(dist[nk]===undefined||cd+1<dist[nk]){
+          dist[nk]=cd+1;
+          queue.push([nr,nc]);
+        }
+      }
+    }
+    return dist[whK]===undefined?null:dist[whK];
+  }
+
+  function shuffleResidential(){
+    const n=SCATTER_COUNT[lvl];
+    // Day 1 promises a fully clean run is possible. Guarantee it: redraw until a clean
+    // route exists AND is short enough that three of them fit the day's budget.
+    const needClean=(lvl===0);
+    const cleanCap=Math.floor(L().budget/3);
+    for(let attempt=0;attempt<500;attempt++){
+      const pool=SCATTER_CANDIDATES.slice();
+      for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=pool[i];pool[i]=pool[j];pool[j]=t;}
+      const chosen=CORE.concat(pool.slice(0,n));
+      const set=new Set(chosen.map(function(a){return a[0]+"-"+a[1];}));
+      if(!needClean){residSet=set;return;}
+      const cc=shortestCost(set,true,null);
+      if(cc!==null&&cc<=cleanCap){residSet=set;return;}
+    }
+    // Fallback (should never be reached): spine only, which is always clean-solvable.
+    residSet=new Set(CORE.map(function(a){return a[0]+"-"+a[1];}));
+  }
 
   const TRUCK='<svg viewBox="0 0 24 24" fill="#1a1a1a" xmlns="http://www.w3.org/2000/svg"><path d="M3 5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v3h3.2a1 1 0 0 1 .8.4l2.6 3.47a1 1 0 0 1 .2.6V16a1 1 0 0 1-1 1h-1.05a2.5 2.5 0 0 1-4.9 0H9.95a2.5 2.5 0 0 1-4.9 0H4a1 1 0 0 1-1-1V5Zm11 5h5.5L17.7 8H14v2ZM7.5 15.25a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Zm10 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5Z"/></svg>';
 
+  // ---- Level configuration. Features unlock progressively. ----
+  // scoring: on-time +10, efficiency (>=2 gate room) +5, health -(2/resid crossing), tip re-cross extra -2.
+  // retrofit load: stain 0, health 0, scores +6 (clean trucks are slower).
   const LEVELS=[
-    {name:"Day 1: Slack", desc:"Gate hours are generous. A fully clean run is possible if you route carefully.", budget:21},
-    {name:"Day 2: Average", desc:"Tighter gate hours. You can't keep every load clean; at least one has to cut through.", budget:20},
-    {name:"Day 3: Peak", desc:"Peak day, 6,500 trucks. Barely enough gate time to finish. Almost everything goes through homes.", budget:18}
+    {name:"Day 1: Slack", desc:"Gate hours are generous. A fully clean run is possible if you route carefully.",
+     budget:21, tipAt:99, tipCost:0, rush:null, scoring:false, retrofits:0, events:false},
+    {name:"Day 2: Average", desc:"Tighter hours, and loads have their own deadlines. Now you're scored, and you have one clean truck to spend.",
+     budget:20, tipAt:2, tipCost:1, rush:[8,6,6], scoring:true, retrofits:1, events:false},
+    {name:"Day 3: Peak", desc:"Peak day, 6,500 trucks. Rush loads back to back, the neighborhood pushes back, and anything can happen between loads.",
+     budget:19, tipAt:2, tipCost:1, rush:[7,7,6], scoring:true, retrofits:2, events:true}
   ];
 
+  // ---- Dynamic events (Day 3). Rolled between loads. ----
+  const EVENTS=[
+    {id:"school", label:"School lets out. Kids on one block, so crossing it costs double pollution this load.",
+     apply:function(st){ st.hotBlock=pickResidCell(); }},
+    {id:"breakdown", label:"Truck breakdown on the yard. You lose 1 gate time this load.",
+     apply:function(st){ st.timePenalty=1; }},
+    {id:"protest", label:"Community protest. One block is closed to trucks this load.",
+     apply:function(st){ st.closedBlock=pickNonSpineCell(); }},
+    {id:"clear", label:"Clear run. No incidents this load.",
+     apply:function(st){}}
+  ];
+
+  function pickResidCell(){
+    const arr=Array.from(residSet);
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
+  // A closure on the diagonal spine forces a longer detour, which a 6 gate-time load
+  // cannot absorb. This picks only off-spine homes, which never lengthen the shortest route.
+  function pickNonSpineCell(){
+    const spine=new Set(CORE.map(function(a){return a[0]+"-"+a[1];}));
+    const arr=Array.from(residSet).filter(function(k){return !spine.has(k);});
+    if(!arr.length)return null;
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
+
   let lvl=0;
-  let path=[], moved=0, time=0, poll=0, done=false;
+  let path=[], moved=0, time=0, poll=0, score=0, done=false;
   let stain={};
+  let tools={retrofit:0};
+  let armed=null;               // 'retrofit' or null
+  let ev={};                    // current load's event state
+  const bestScores={};          // day index -> best score this session
 
   const board=document.getElementById("board");
   function key(r,c){return r+"-"+c;}
   function isResid(r,c){return residSet.has(key(r,c));}
+  function L(){return LEVELS[lvl];}
 
   function residColor(passes){
     const stops=["#FAECE7","#F0997B","#D98C6A","#B5664A","#8A4632","#5E2D1F"];
@@ -121,7 +257,7 @@
   function buildLevelBar(){
     const bar=document.getElementById("levelbar");
     bar.innerHTML="";
-    LEVELS.forEach(function(L,i){
+    LEVELS.forEach(function(lv,i){
       const p=document.createElement("div");
       p.className="pill"+(i===lvl?" active":"");
       p.textContent="Day "+(i+1);
@@ -130,16 +266,103 @@
     });
   }
 
+  function rollEvent(){
+    ev={};
+    if(!L().events) return;
+    const cap=L().rush?L().rush[moved]:99;
+    const e=EVENTS[Math.floor(Math.random()*EVENTS.length)];
+    e.apply(ev);
+    // Verify a closure still leaves a deliverable route inside this load's deadline.
+    // With no reroute permit there is no escape hatch, so an unsurvivable closure is
+    // dropped rather than shown.
+    if(ev.closedBlock){
+      const reach=shortestCost(residSet,false,ev.closedBlock);
+      if(reach===null||reach>cap){ev={};ev.label=EVENTS[3].label;return;}
+    }
+    ev.label=e.label;
+  }
+
   function loadLevel(){
-    path=[];moved=0;time=0;poll=0;done=false;stain={};
-    document.getElementById("budget").textContent="/"+LEVELS[lvl].budget;
+    path=[];moved=0;time=0;poll=0;score=0;done=false;stain={};
+    armed=null;
+    tools={retrofit:L().retrofits};
+    shuffleResidential();
+    rollEvent();
+    document.getElementById("budget").textContent="/"+L().budget;
     document.getElementById("leveltitle").innerHTML=
-      "<span>"+LEVELS[lvl].name+"</span> &nbsp;<small>"+LEVELS[lvl].desc+"</small>";
+      "<span>"+L().name+"</span> &nbsp;<small>"+L().desc+"</small>";
     document.getElementById("msg").textContent="";
     document.getElementById("next").hidden=true;
     document.getElementById("deliver").hidden=false;
+    document.getElementById("scorestat").style.display=L().scoring?"block":"none";
+    document.getElementById("tools").style.display=(L().retrofits>0)?"block":"none";
+    document.getElementById("policy").style.display=(L().retrofits>0)?"block":"none";
+    if(L().retrofits>0){
+      document.getElementById("policy").innerHTML=
+        "<b>Clean-truck retrofit.</b> Each one runs a load with zero pollution, but clean trucks are slower, so that load scores fewer points. This mirrors the real <b>EPA Clean Ports grant</b>: it funds about <b>475 zero-emissions drayage trucks, roughly 5% of the fleet</b>. You never have enough to clean every load. Where do you spend them?";
+    }
     buildLevelBar();
+    buildTools();
+    updateBadges();
     render();
+    updateBest();
+  }
+
+  function buildTools(){
+    const row=document.getElementById("toolrow");
+    row.innerHTML="";
+    const defs=[];
+    if(L().retrofits>0)defs.push({id:"retrofit",name:"Clean-truck retrofit",desc:"Run this load with zero pollution. Scores fewer points."});
+    defs.forEach(function(d){
+      const el=document.createElement("div");
+      el.className="tool";
+      el.id="tool-"+d.id;
+      el.innerHTML="<div class='tname'>"+d.name+"</div><div class='tdesc'>"+d.desc+"</div>"+
+        "<div class='tcount'>"+(tools[d.id]+" left")+"</div>";
+      el.onclick=function(){armTool(d.id);};
+      row.appendChild(el);
+    });
+  }
+
+  function refreshTools(){
+    ["retrofit"].forEach(function(id){
+      const el=document.getElementById("tool-"+id);
+      if(!el)return;
+      el.classList.toggle("armed",armed===id);
+      const spent=tools[id]<=0;
+      el.classList.toggle("spent",spent);
+      const c=el.querySelector(".tcount");
+      if(c)c.textContent=(tools[id]+" left");
+    });
+  }
+
+  function armTool(id){
+    if(tools[id]<=0){document.getElementById("msg").textContent="No "+id+"s left this day.";return;}
+    armed=(armed===id)?null:id;
+    const msg=document.getElementById("msg");
+    if(armed==="retrofit")msg.textContent="Clean truck armed. Lay this load's route and it'll run pollution-free.";
+    else msg.textContent="";
+    refreshTools();
+  }
+
+  function updateBadges(){
+    const rd=document.getElementById("rushdead");
+    if(L().rush && !done && moved<3){
+      rd.textContent="Load "+(moved+1)+" of 3, deadline "+L().rush[moved]+" gate time";
+      rd.style.display="inline-block";
+    } else rd.style.display="none";
+
+    const eb=document.getElementById("eventbadge");
+    if(L().events && ev.label && !done && moved<3){
+      eb.textContent="\u26A0 "+ev.label;
+      eb.style.display="inline-block";
+    } else eb.style.display="none";
+  }
+
+  function cellBlocked(r,c){
+    const k=key(r,c);
+    if(ev.closedBlock===k)return true;
+    return false;
   }
 
   function render(){
@@ -155,13 +378,15 @@
         d.style.background=residColor(passes);
         d.style.cursor="pointer";
         if(passes>=3)stained=true;
+        if(ev.hotBlock===key(r,c))d.classList.add("event-hot");
       }
       else{d.classList.add("road");}
+      if(cellBlocked(r,c))d.classList.add("blocked");
       const idx=path.findIndex(function(p){return p.r===r&&p.c===c;});
       if(idx>=0){
         d.classList.add("onpath");
         if(stained)d.classList.add("stained");
-        const t=document.createElement("span");t.className="truck";t.innerHTML=TRUCK;
+        const t=document.createElement("span");t.className="truck"+(armed==="retrofit"?" clean":"");t.innerHTML=TRUCK;
         const s=document.createElement("span");s.className="seq";s.textContent=(idx+1);
         d.appendChild(t);d.appendChild(s);
       }
@@ -171,6 +396,9 @@
     document.getElementById("time").textContent=time;
     document.getElementById("moved").textContent=moved;
     document.getElementById("poll").textContent=poll;
+    document.getElementById("score").textContent=score;
+    updateBadges();
+    refreshTools();
   }
 
   function adjacent(a,b){const dr=Math.abs(a.r-b.r),dc=Math.abs(a.c-b.c);return dr<=1&&dc<=1&&(dr+dc>0);}
@@ -178,15 +406,18 @@
   function click(r,c){
     if(done)return;
     const msg=document.getElementById("msg");
+
+    if(cellBlocked(r,c)){msg.textContent="That block is closed this load. Route around it.";return;}
+
     if(r===PORT.r&&c===PORT.c){path=[];render();msg.textContent="Route cleared. Click cells outward from the Port.";return;}
     const cell={r:r,c:c};
     const last=path.length?path[path.length-1]:PORT;
     const existing=path.findIndex(function(p){return p.r===r&&p.c===c;});
     if(existing>=0){path=path.slice(0,existing+1);render();msg.textContent="Route trimmed back to here.";return;}
     if(path.length && path[path.length-1].r===WH.r && path[path.length-1].c===WH.c){
-      msg.textContent="You've already reached the warehouse \u2014 hit Deliver, or click the Port to start over.";return;
+      msg.textContent="You've reached the warehouse. Hit Deliver, or click the Port to start over.";return;
     }
-    if(!adjacent(last,cell)){msg.textContent="Pick a cell touching the end of your route \u2014 diagonals count.";return;}
+    if(!adjacent(last,cell)){msg.textContent="Pick a cell touching the end of your route. Diagonals count.";return;}
     path.push(cell);
     render();
     msg.textContent=(r===WH.r&&c===WH.c)?"Reached the warehouse. Hit Deliver this load.":"";
@@ -198,33 +429,99 @@
     if(!path.length){msg.textContent="Lay down a route from the Port first.";return;}
     const last=path[path.length-1];
     if(!(last.r===WH.r&&last.c===WH.c)){msg.textContent="Your route has to end ON the warehouse. Click into the WH cell to finish it.";return;}
-    const steps=path.length;
+
+    // block check on the committed path
+    for(const p of path){ if(cellBlocked(p.r,p.c)){msg.textContent="Your route runs through a closed block. Route around it.";return;} }
+
+    const isRetrofit=(armed==="retrofit");
     const residCells=path.filter(function(p){return isResid(p.r,p.c);});
-    const budget=LEVELS[lvl].budget;
+
+    // tipping surcharge (skipped for retrofit runs, since clean trucks don't add backlash)
+    let tipExtra=0;
+    if(!isRetrofit){
+      residCells.forEach(function(p){
+        if((stain[key(p.r,p.c)]||0)>=L().tipAt)tipExtra+=L().tipCost;
+      });
+    }
+    const evTimePenalty=ev.timePenalty||0;
+    const steps=path.length+tipExtra+evTimePenalty;
+    const budget=L().budget;
     const remaining=2-moved;
-    if(time+steps>budget){msg.textContent="Not enough gate time left for that route. A shorter cut through the neighborhood would make the deadline.";return;}
-    if(time+steps+remaining*6>budget){msg.textContent="Careful \u2014 take a route this long and you won't have gate time left for the loads still waiting. You may have to cut through homes.";return;}
-    time+=steps; moved+=1; poll+=residCells.length*10;
-    residCells.forEach(function(p){const k=key(p.r,p.c);stain[k]=(stain[k]||0)+1;});
+    const loadCap=L().rush?L().rush[moved]:null;
+
+    if(loadCap!==null && steps>loadCap){
+      msg.textContent="This load's deadline is "+loadCap+" gate time, but your route takes "+steps+
+        (tipExtra?" (incl. +"+tipExtra+" from dark blocks)":"")+
+        (evTimePenalty?" (incl. +"+evTimePenalty+" from the breakdown)":"")+". Find a shorter way.";
+      return;
+    }
+    if(time+steps>budget){msg.textContent="Not enough gate time left for that route"+
+      (tipExtra?". Those dark blocks add +"+tipExtra+".":". A shorter cut would make the deadline.");return;}
+    if(!L().rush && time+steps+remaining*6>budget){
+      msg.textContent="Careful. A route this long leaves too little gate time for the loads still waiting, so you may have to cut through homes.";return;}
+
+    // ---- commit the load ----
+    time+=steps; moved+=1;
+
+    let loadScore=0, hotHits=0;
+    if(isRetrofit){
+      tools.retrofit--;
+      loadScore=6; // clean trucks score fewer points, no pollution, no stain
+    } else {
+      residCells.forEach(function(p){
+        const k=key(p.r,p.c);
+        let add=10;
+        if(ev.hotBlock===k){add=20;hotHits++;}
+        poll+=add;
+        stain[k]=(stain[k]||0)+1;
+      });
+      loadScore=10;
+      if(loadCap!==null && (loadCap-steps)>=2)loadScore+=5;
+      let health=residCells.length*2 + hotHits*2 + tipExtra*2;
+      loadScore-=health;
+    }
+    if(L().scoring)score+=loadScore;
+
+    armed=null;
     path=[];
+
     if(moved>=3){
       done=true;
       let verdict;
-      if(poll===0)verdict="A perfectly clean run. Possible here \u2014 but notice how little slack it took.";
-      else if(poll<=30)verdict="A mix of clean and dirty routes. The realistic tradeoff under a tight deadline.";
+      if(poll===0)verdict="A perfectly clean run.";
+      else if(poll<=60)verdict="A mix of clean and dirty routes, the realistic tradeoff under a tight deadline.";
       else verdict="Most loads cut straight through. On time, but look how dark those blocks got.";
-      const lastDay=lvl>=LEVELS.length-1;
-      msg.textContent="All 3 loads delivered on Day "+(lvl+1)+". Pollution score "+poll+". "+verdict+
-        (lastDay?" You've run all three days. Compare the scores: same map, only the gate hours changed.":" Same map next day \u2014 only the gate hours get tighter.");
+      let scoreLine=L().scoring?(" Final score "+score+".") : "";
+      if(L().scoring){
+        if(bestScores[lvl]===undefined||score>bestScores[lvl]){bestScores[lvl]=score;scoreLine+=" \u2b50 New best!";}
+      }
+      msg.textContent="All 3 loads delivered. Pollution "+poll+"."+scoreLine+" "+verdict+
+        (L().scoring?" Restart to beat your score.":"");
       document.getElementById("deliver").hidden=true;
       const nb=document.getElementById("next");
-      if(!lastDay){nb.hidden=false;nb.textContent="Go to Day "+(lvl+2)+" \u2192";}
+      if(lvl<2){nb.hidden=false;nb.textContent="Go to Day "+(lvl+2)+" \u2192";}
       else{nb.hidden=true;}
+      updateBest();
     } else {
-      msg.textContent="Load delivered ("+residCells.length+" residential blocks, "+steps+" gate time). "+
-        (3-moved)+" left, "+(budget-time)+" gate time remaining. Watch the homes you crossed get darker.";
+      shuffleResidential();
+      rollEvent();
+      const parts=[];
+      parts.push("Load delivered ("+residCells.length+" residential blocks, "+steps+" gate time"+
+        (tipExtra?", +"+tipExtra+" dark-block surcharge":"")+(isRetrofit?", clean truck":"")+").");
+      if(L().scoring)parts.push((loadScore>=0?"+":"")+loadScore+" points.");
+      parts.push((3-moved)+" left, "+(budget-time)+" gate time remaining.");
+      if(L().rush)parts.push("Next deadline: "+L().rush[moved]+".");
+      if(L().events && ev.label)parts.push("\u26A0 "+ev.label);
+      msg.textContent=parts.join(" ");
     }
     render();
+  }
+
+  function updateBest(){
+    const b=document.getElementById("best");
+    if(L().scoring && bestScores[lvl]!==undefined){
+      b.innerHTML="Best today: <b>"+bestScores[lvl]+"</b>";
+    } else b.innerHTML="";
   }
 
   document.getElementById("deliver").onclick=deliver;
